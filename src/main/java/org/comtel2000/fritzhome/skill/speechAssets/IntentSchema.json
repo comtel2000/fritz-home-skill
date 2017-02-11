@@ -1,0 +1,52 @@
+{
+  "intents": [
+    {
+      "intent": "StatusIntent"
+    },
+        {
+      "intent": "ListDeviceIntent"
+    },
+    {
+      "intent": "AllDeviceOnIntent"
+    },
+    {
+      "intent": "AllDeviceOffIntent"
+    },
+    {
+      "intent": "DeviceOnIntent",
+      "slots": [
+        {
+          "name" : "Device",
+          "type": "DEVICE_NAMES"
+        }
+      ]
+    },
+    {
+      "intent": "DeviceOffIntent",
+      "slots": [
+        {
+          "name" : "Device",
+          "type": "DEVICE_NAMES"
+        }
+      ]
+    },
+    {
+      "intent": "DeviceTempIntent",
+      "slots": [
+        {
+          "name" : "Device",
+          "type": "DEVICE_NAMES"
+        }
+      ]
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.CancelIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    }
+  ]
+}

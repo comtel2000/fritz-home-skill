@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<SessionInfo>
+	<SID>6ca6dd666e661000</SID>
+	<Challenge>0000000</Challenge>
+	<BlockTime>0</BlockTime>
+	<Rights>
+		<Name>Dial</Name>
+		<Access>2</Access>
+		<Name>HomeAuto</Name>
+		<Access>2</Access>
+		<Name>Phone</Name>
+		<Access>2</Access>
+	</Rights>
+</SessionInfo>

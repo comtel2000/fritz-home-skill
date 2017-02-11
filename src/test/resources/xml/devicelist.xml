@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<devicelist version="1">
+	<device functionbitmask="2944" fwversion="03.83" id="17"
+		identifier="08761 0076111" manufacturer="AVM" productname="FRITZ!DECT 200">
+		<present>1</present>
+		<name>Roof</name>
+		<switch>
+			<state>0</state>
+			<mode>manuell</mode>
+			<lock>0</lock>
+			<devicelock>0</devicelock>
+		</switch>
+		<powermeter>
+			<power>0</power>
+			<energy>135311</energy>
+		</powermeter>
+		<temperature>
+			<celsius>225</celsius>
+			<offset>0</offset>
+		</temperature>
+	</device>
+	<device functionbitmask="640" fwversion="03.59" id="18"
+		identifier="08761 0076000" manufacturer="AVM" productname="FRITZ!DECT 200">
+		<present>0</present>
+		<name>Office</name>
+		<switch>
+			<state />
+			<mode />
+			<lock />
+			<devicelock />
+		</switch>
+		<powermeter>
+			<power />
+			<energy />
+		</powermeter>
+	</device>
+	<group functionbitmask="6784" fwversion="1.0" id="900"
+		identifier="8F:70:00-900" manufacturer="AVM" productname="">
+		<present>1</present>
+		<name>Group1</name>
+		<switch>
+			<state>0</state>
+			<mode>manuell</mode>
+			<lock>0</lock>
+			<devicelock>0</devicelock>
+		</switch>
+		<powermeter>
+			<power>0</power>
+			<energy>135311</energy>
+		</powermeter>
+		<groupinfo>
+			<masterdeviceid>0</masterdeviceid>
+			<members>17,18</members>
+		</groupinfo>
+	</group>
+</devicelist>

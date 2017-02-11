@@ -1,0 +1,41 @@
+StatusIntent Status
+StatusIntent nach Status
+StatusIntent nach dem Status
+StatusIntent Bist du online
+
+ListDeviceIntent Liste
+ListDeviceIntent nach Liste
+ListDeviceIntent Geräteübersicht
+ListDeviceIntent nach Geräteübersicht
+ListDeviceIntent Geräteliste
+ListDeviceIntent nach Geräteliste
+
+AllDeviceOnIntent alles an
+AllDeviceOnIntent alle Geräte an
+AllDeviceOnIntent schalte alles an
+AllDeviceOnIntent schalte alle Geräte an
+
+AllDeviceOffIntent alles aus
+AllDeviceOffIntent alle Geräte aus
+AllDeviceOffIntent schalte alles aus
+AllDeviceOffIntent schalte alle Geräte aus
+
+DeviceOnIntent {Device} an
+DeviceOnIntent schalte {Device} an
+DeviceOnIntent schalte Gerät {Device} an
+DeviceOnIntent schalte Gruppe {Device} an
+
+DeviceOffIntent {Device} aus
+DeviceOffIntent schalte {Device} aus
+DeviceOffIntent schalte Gerät {Device} aus
+DeviceOffIntent schalte Gruppe {Device} aus
+
+DeviceTempIntent {Device} Temperatur
+DeviceTempIntent die Temperatur von {Device}
+DeviceTempIntent die Temperatur an {Device}
+DeviceTempIntent die Temperatur im {Device}
+DeviceTempIntent wie ist die Temperatur von {Device}
+DeviceTempIntent wie ist die Temperatur an {Device}
+DeviceTempIntent wie ist die Temperatur im {Device}
+DeviceTempIntent wie viel Grad hat {Device}
+DeviceTempIntent wie viel Grad sind im {Device}
