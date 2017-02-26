@@ -1,12 +1,12 @@
 # Alexa FritzBox Home Skill
 Control your FritzBox Home devices by [AWS Lambda](http://aws.amazon.com/lambda) function by your own private developer skill.
 
-### Why not as Alexa Home Skill Kit? 
+### Why not as Alexa Home Skill Kit?
 The current version has a lot of restrictions and missing functionality, no Java SDK, etc.
 
 ### Why not as public skill?
-There is no fritzbox internal OAuth and your connection data must be managed by a cloud OAuth service or additional hardware in your home network.   
-Alternatives can be found here: 
+There is no fritzbox internal OAuth and your connection data must be managed by a cloud OAuth service or additional hardware in your home network.
+Alternatives can be found here:
 [https://www.eclipse.org/smarthome/](https://www.eclipse.org/smarthome/)
 
 ## Setup
@@ -18,7 +18,7 @@ To run this fritzbox home skill you need to do two things. The first is to deplo
 3. Skip the blueprint
 4. Name the Lambda Function "Fritz-Home-Skill".
 5. Select the runtime as Java 8
-6. Go to the the root directory containing pom.xml, and run 'mvn clean package -P jar'. This will generate a zip file named "fritz-home-skill-0.0.1-SNAPSHOT-jar-with-dependencies.jar" in the target directory.
+6. Go to the project root directory containing pom.xml, change the fritzhome.user + password properties (remove the url to skip connection tests) and run 'mvn clean package -P jar'. This will generate a zip file named "fritz-home-skill-0.0.1-SNAPSHOT-jar-with-dependencies.jar" in the target directory.
 7. Select Code entry type as "Upload a .ZIP file" and then upload the "fritz-home-skill-0.0.1-SNAPSHOT-jar-with-dependencies.jar" file from the build directory to Lambda
 8. Set the Handler as "org.comtel2000.fritzhome.skill.FritzHomeSpeechletRequestStreamHandler" (this refers to the Lambda RequestStreamHandler file in the zip).
 9. Create a basic execution role and click create.
@@ -29,9 +29,9 @@ To run this fritzbox home skill you need to do two things. The first is to deplo
 14. Copy the ARN from the top right to be used later in the Alexa Skill Setup.
 15. Fill the environment variables with your dyndns provider or myfritz.net url and create a [Fritzbox](http://fritz.box) user with the permission home automation.
 
-![aws handler] (doc/aws_handler.png)
-
 ![env variables] (doc/fritz_url.png)
+
+![aws handler] (doc/aws_handler.png)
 
 ### Alexa Skill Setup
 1. Go to the [Alexa Console](https://developer.amazon.com/edw/home.html) and click Add a New Skill.
@@ -52,6 +52,6 @@ To run this fritzbox home skill you need to do two things. The first is to deplo
 
     User: "Alexa, frage Fritzbox nach der Geräteliste."
     Alexa: "Das Geräte xy ist eingeschaltet, die Temp..."
-    
+
 ## License
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)

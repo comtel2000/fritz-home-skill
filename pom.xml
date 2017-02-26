@@ -9,9 +9,11 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<fritzhome.url>https://localhost</fritzhome.url>
-		<fritzhome.user>alexa</fritzhome.user>
-		<fritzhome.pwd>alexa</fritzhome.pwd>
+		<!-- your local fritzbox ip (remove to skip tests) -->
+		<fritzhome.url>https://fritz.box</fritzhome.url>
+		<!-- your fritzbox user with automation right -->
+		<fritzhome.user>[your user id]</fritzhome.user>
+		<fritzhome.pwd>[your user pwd]</fritzhome.pwd>
 	</properties>
 
 	<licenses>

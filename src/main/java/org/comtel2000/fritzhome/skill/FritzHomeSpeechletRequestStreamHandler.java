@@ -7,14 +7,18 @@ import com.amazon.speech.speechlet.lambda.SpeechletRequestStreamHandler;
 
 /**
  * org.comtel2000.fritzhome.skill.FritzHomeSpeechletRequestStreamHandler
- * 
+ *
  * @author comtel
  *
  */
 public final class FritzHomeSpeechletRequestStreamHandler extends SpeechletRequestStreamHandler {
   private static final Set<String> supportedApplicationIds = new HashSet<>();
   static {
-    supportedApplicationIds.add("amzn1.ask.skill.11111111111-1111111111");
+    /*
+     * This Id can be found on https://developer.amazon.com/edw/home.html#/ "Edit" the relevant
+     * Alexa Skill and put the relevant Application Ids in this Set.
+     */
+    // supportedApplicationIds.add("amzn1.echo-sdk-ams.app.[unique-value-here]");
   }
 
   public FritzHomeSpeechletRequestStreamHandler() {
