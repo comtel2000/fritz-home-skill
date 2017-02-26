@@ -1,5 +1,5 @@
 # Alexa FritzBox Home Skill
-Control your FritzBox Home devices by [AWS Lambda](http://aws.amazon.com/lambda) function by your own private developer skill.
+Control your AVM FritzBox Home devices over [AWS Lambda](http://aws.amazon.com/lambda) by your own private developer skill.
 
 ### Why not as Alexa Home Skill Kit?
 The current version has a lot of restrictions and missing functionality, no Java SDK, etc.
@@ -45,13 +45,18 @@ To run this fritzbox home skill you need to do two things. The first is to deplo
 8. Enable your private test account and skip Publish stuff -> This skill is enabled for testing on your account
 9. The skill is now available as your own private skill, done.
 
-## Examples
-### german:
+## Howto use
+### dialogs:
     User: "Alexa, frage Fritzbox nach der Temperatur im Büro."
     Alexa: "Die Temperatur beträgt 22,3 Grad Celsius."
 
     User: "Alexa, frage Fritzbox nach der Geräteliste."
     Alexa: "Das Geräte xy ist eingeschaltet, die Temp..."
 
+    User: "Alexa, öffne Fritzbox und schalte Gerät Büro an."
+    Alexa: "Ok."
+
+    User: "Alexa, öffne Fritzbox und schalte Gruppe Außenbeleuchtung aus."
+    Alexa: "Ok."
 ## License
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
