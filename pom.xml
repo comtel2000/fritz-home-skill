@@ -10,10 +10,10 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<!-- your local fritzbox ip (remove to skip tests) -->
-		<fritzhome.url>https://fritz.box</fritzhome.url>
+		<fritzhome.url></fritzhome.url>
 		<!-- your fritzbox user with automation right -->
-		<fritzhome.user>[your user id]</fritzhome.user>
-		<fritzhome.pwd>[your user pwd]</fritzhome.pwd>
+		<fritzhome.user>[schorsch36]</fritzhome.user>
+		<fritzhome.pwd>[RXIII1844908]</fritzhome.pwd>
 	</properties>
 
 	<licenses>
