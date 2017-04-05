@@ -39,3 +39,14 @@ DeviceTempIntent wie ist die Temperatur an {Device}
 DeviceTempIntent wie ist die Temperatur im {Device}
 DeviceTempIntent wie viel Grad hat {Device}
 DeviceTempIntent wie viel Grad sind im {Device}
+
+DevicePowerIntent {Device} Energie
+DevicePowerIntent {Device} Verbrauch
+DevicePowerIntent nach dem Verbrauch von {Device}
+DevicePowerIntent nach aktuelle Leistung an {Device}
+DevicePowerIntent wie ist der Verbrauch von {Device}
+DevicePowerIntent wie viel Energie verbraucht {Device}
+DevicePowerIntent wie viel verbraucht {Device}
+DevicePowerIntent wie ist der Verbrauch von Gerät {Device}
+DevicePowerIntent wie viel Energie verbraucht Gerät {Device}
+DevicePowerIntent wie viel verbraucht Gerät {Device}

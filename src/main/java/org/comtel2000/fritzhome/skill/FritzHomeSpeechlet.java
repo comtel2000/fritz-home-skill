@@ -39,6 +39,7 @@ public class FritzHomeSpeechlet implements Speechlet {
   private final static String DEVICE_ON_INTENT = "DeviceOnIntent";
   private final static String DEVICE_OFF_INTENT = "DeviceOffIntent";
   private final static String DEVICE_TEMP_INTENT = "DeviceTempIntent";
+  private final static String DEVICE_POWER_INTENT = "DevicePowerIntent";
 
   private final static String HELP_INTENT = "AMAZON.HelpIntent";
   private final static String CANCEL_INTENT = "AMAZON.CancelIntent";
@@ -85,6 +86,8 @@ public class FritzHomeSpeechlet implements Speechlet {
         return setDevice(intent, false);
       case DEVICE_TEMP_INTENT:
         return getDeviceTemp(intent, request.getLocale());
+      case DEVICE_POWER_INTENT:
+        return getDeviceEnergy(intent, request.getLocale());
       case HELP_INTENT:
         return getHelpResponse();
       case CANCEL_INTENT:
@@ -148,6 +151,38 @@ public class FritzHomeSpeechlet implements Speechlet {
       logger.error(e.getMessage(), e);
     }
     return newResponse("Es ist ein Fehler beim Lesen der Gerätetemperatur aufgetreten");
+  }
+
+  private SpeechletResponse getDeviceEnergy(final Intent intent, final Locale locale) {
+    Slot deviceSlot = intent.getSlot(DEVICE_SLOT);
+    if (deviceSlot == null || deviceSlot.getValue() == null) {
+      return newResponse("Gerät nicht erkannt");
+    }
+
+    try {
+      Optional<SwitchDevice> dev = findDevice(deviceSlot.getValue());
+      if (!dev.isPresent()) {
+        return newResponse(String.format("Das Gerät %s ist mir nicht bekannt", deviceSlot.getValue()));
+      }
+      SwitchDevice device = dev.get();
+      if (!device.isPresent()) {
+        return newResponse(String.format("%s %s ist aktuell nicht verfügbar", toGroupName(device), deviceSlot.getValue()));
+      }
+      if (!device.isPowermeter()) {
+        return newResponse(String.format("%s %s hat keine Energieverbauchswerte", toGroupName(device), deviceSlot.getValue()));
+      }
+      StringBuilder sb = new StringBuilder();
+      sb.append("Der aktuelle Energieverbrauch von ").append(deviceSlot.getValue()).append(" ist ")
+          .append(FritzUtils.getPower(locale, device.getPower()));
+      if (device.getEnergy() > 0) {
+        sb.append(" mit einem Gesamtverbrauch von ").append(FritzUtils.getEnergy(locale, device.getEnergy()));
+      }
+
+      return newResponse("Fritz Home Energie", sb.toString());
+    } catch (Exception e) {
+      logger.error(e.getMessage(), e);
+    }
+    return newResponse("Es ist ein Fehler beim Lesen des Energieverbrauches aufgetreten");
   }
 
   private Optional<SwitchDevice> findDevice(String name) throws Exception {

@@ -39,6 +39,15 @@
         }
       ]
     },
+   {
+      "intent": "DevicePowerIntent",
+      "slots": [
+        {
+          "name" : "Device",
+          "type": "DEVICE_NAMES"
+        }
+      ]
+    },
     {
       "intent": "AMAZON.HelpIntent"
     },

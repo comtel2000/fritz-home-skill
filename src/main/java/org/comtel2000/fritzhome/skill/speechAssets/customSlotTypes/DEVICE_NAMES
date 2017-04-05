@@ -4,8 +4,13 @@ Badezimmer
 Bad
 Flur
 Büro
-Office
 Küche
+Wohnzimmerlicht
+Badlicht
+Flurlicht
+Bürolicht
+Küchenlicht
+Office
 Toilette
 Zimmer
 Garage
@@ -16,3 +21,5 @@ WC
 WZ
 SZ
 BZ
+Steckdose
+Heizung

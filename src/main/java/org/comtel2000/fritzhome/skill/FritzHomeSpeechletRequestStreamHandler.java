@@ -1,5 +1,6 @@
 package org.comtel2000.fritzhome.skill;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,13 +13,16 @@ import com.amazon.speech.speechlet.lambda.SpeechletRequestStreamHandler;
  *
  */
 public final class FritzHomeSpeechletRequestStreamHandler extends SpeechletRequestStreamHandler {
-  private static final Set<String> supportedApplicationIds = new HashSet<>();
+
+  public final static String ENV_APPID = "FRITZHOME_APPID";
+
+  private static Set<String> supportedApplicationIds = new HashSet<>();
+
   static {
-    /*
-     * This Id can be found on https://developer.amazon.com/edw/home.html#/ "Edit" the relevant
-     * Alexa Skill and put the relevant Application Ids in this Set.
-     */
-    // supportedApplicationIds.add("amzn1.echo-sdk-ams.app.[unique-value-here]");
+    String appID = System.getenv(ENV_APPID);
+    if (appID != null && appID.length() > 0){
+      supportedApplicationIds = Collections.singleton(appID.startsWith("amzn") ? appID : "amzn1.echo-sdk-ams.app." + appID);
+    }
   }
 
   public FritzHomeSpeechletRequestStreamHandler() {

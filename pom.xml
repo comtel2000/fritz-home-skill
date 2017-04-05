@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.comtel2000</groupId>
 	<artifactId>fritz-home-skill</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.0</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -14,6 +14,7 @@
 		<!-- your fritzbox user with automation right -->
 		<fritzhome.user>[your user id]</fritzhome.user>
 		<fritzhome.pwd>[your user pwd]</fritzhome.pwd>
+		<fritzhome.appid>amzn1.echo-sdk-ams.app.[unique-value-here]</fritzhome.appid>
 	</properties>
 
 	<licenses>
@@ -109,6 +110,7 @@
 								<FRITZHOME_URL>${fritzhome.url}</FRITZHOME_URL>
 								<FRITZHOME_USER>${fritzhome.user}</FRITZHOME_USER>
 								<FRITZHOME_PWD>${fritzhome.pwd}</FRITZHOME_PWD>
+								<FRITZHOME_APPID>${fritzhome.appid}</FRITZHOME_APPID>
 							</environmentVariables>
 						</configuration>
 					</plugin>
