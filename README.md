@@ -46,9 +46,9 @@ To run this fritzbox home skill you need to do two things. The first is to deplo
 9. Enable your private test account and skip Publish stuff -> This skill is enabled for testing on your account
 10. The skill is now available as your own private skill, done.
 
-![alexa app id](https://github.com/comtel2000/fritz-home-skill/blob/master/doc/doc/app_id.png "Application Id")
+![alexa app id](https://github.com/comtel2000/fritz-home-skill/blob/master/doc/app_id.png "Application Id")
 
-![alexa intent](https://github.com/comtel2000/fritz-home-skill/blob/master/doc/doc/intent_schema.png "Intens + Utterances")
+![alexa intent](https://github.com/comtel2000/fritz-home-skill/blob/master/doc/intent_schema.png "Intens + Utterances")
 
 ## Howto use
 ### dialogs:
