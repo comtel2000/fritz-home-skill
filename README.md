@@ -13,20 +13,20 @@ Alternatives can be found here:
 To run this fritzbox home skill you need to do two things. The first is to deploy the fritz-home-skill code in lambda, and the second is to configure your private Alexa skill to use Lambda.
 
 ### AWS Lambda Setup
-1. Go to the AWS Console and click on the Lambda link. Note: ensure you are in us-east/irland or you wont be able to use Alexa with Lambda.
+1. Go to the AWS Console and click on the Lambda link. Note: ensure you are in 'us-east' / 'irland' or you wont be able to use Alexa with Lambda.
 2. Click on the Create a Lambda Function or Get Started Now button.
 3. Skip the blueprint
-4. Name the Lambda Function "Fritz-Home-Skill".
+4. Name your Lambda Function - sample: "Fritz-Home-Skill".
 5. Select the runtime as Java 8
 6. Download the latest release jar package from (https://github.com/comtel2000/fritz-home-skill/releases).
-7. Select Code entry type as "Upload a .ZIP file" and then upload the "fritz-home-skill-0.1.0-jar-with-dependencies.jar" file from the build directory to Lambda
-8. Set the Handler as "org.comtel2000.fritzhome.skill.FritzHomeSpeechletRequestStreamHandler" (this refers to the Lambda RequestStreamHandler file in the zip).
+7. Select Code entry type as "Upload a .ZIP file" and then upload the 'fritz-home-skill-[VERSION]-jar-with-dependencies.jar' file from the build directory to Lambda
+8. Set the Handler as 'org.comtel2000.fritzhome.skill.FritzHomeSpeechletRequestStreamHandler' (this refers to the Lambda RequestStreamHandler file in the zip).
 9. Create a basic execution role and click create.
 10. Leave the Advanced settings as the defaults. Click Save (not Save and Test).
 11. Click "Next" and review the settings then click "Create Function"
 12. Click the "Event Sources" tab and select "Add event source"
 13. Set the Event Source type as Alexa Skills kit and Enable it now. Click Submit.
-14. Copy the ARN from the top right to be used later in the Alexa Skill Setup.
+14. Copy the *ARN* from the top right to be used later in the Alexa Skill Setup.
 15. Fill the environment variables with your application id (amzn1.sdk...) dyndns provider or myfritz.net url and create a [Fritzbox](http://fritz.box) user with the permission home automation.
 
 ![env variables](https://github.com/comtel2000/fritz-home-skill/blob/master/doc/aws_lambda.png "ENV settings")
@@ -39,16 +39,15 @@ To run this fritzbox home skill you need to do two things. The first is to deplo
 3. Set "FritzHome" as the skill name and "fritzbox" as the invocation name, this is what is used to activate your skill. For example you would say: "Alexa, ask fritzbox for device list."
 4. Select the Lambda ARN for the skill Endpoint and paste the ARN copied from above. Click Next.
 5. Copy the Intent Schema from the included IntentSchema.json.
-6. Add Custom Slot Type with name: "DEVICE_NAMES" and copy the names from the included device_names.txt. Click Add.
+6. Add Custom Slot Type with name: 'DEVICE_NAMES' and copy the names from the included device_names.txt. Click Add.
 7. Copy the Utterances from the included Utterances.txt. Click Next.
-8. Go back to the skill Information tab and copy the appId. Paste the appId into the FritzHomeSpeechletRequestStreamHandler.java file for the variable supportedApplicationIds,
-   then update the lambda source zip file with this change and upload to lambda again, this step makes sure the lambda function only serves request from authorized source.
+8. Go back to the skill Information tab and copy the appId. Paste the appId into the environment variable 'FRITZHOME_APPID', this step makes sure the lambda function only serves request from your private and authorized source.
 9. Enable your private test account and skip Publish stuff -> This skill is enabled for testing on your account
 10. The skill is now available as your own private skill, done.
 
-![alexa app id](https://github.com/comtel2000/fritz-home-skill/blob/master/doc/app_id.png "Application Id")
+![alexa app id](https://github.com/comtel2000/fritz-home-skill/blob/master/doc/app_id.png 'Application Id")
 
-![alexa intent](https://github.com/comtel2000/fritz-home-skill/blob/master/doc/intent_schema.png "Intens + Utterances")
+![alexa intent](https://github.com/comtel2000/fritz-home-skill/blob/master/doc/intent_schema.png "Intents + Utterances")
 
 ## Howto use
 ### dialogs:
