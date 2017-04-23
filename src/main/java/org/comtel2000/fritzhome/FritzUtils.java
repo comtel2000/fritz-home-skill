@@ -8,11 +8,11 @@ import java.util.Locale;
 import org.comtel2000.fritzhome.SwitchDevice.State;
 
 /**
- * 
+ *
  * Fritz utilities
- * 
+ *
  * @author comtel
- * 
+ *
  * @see <a href=
  *      "https://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/AVM_Technical_Note_-_Session_ID.pdf">AVM_Technical_Note_-_Session_ID.pdf</a>
  */
@@ -82,17 +82,16 @@ public class FritzUtils {
 
   /**
    * Formated current power output (sample: 10.22 W)
-   * 
+   *
    * @param locale Locale
-   * @param power value in 0,01 W (current power output, refresh interval 2 minutes)
+   * @param power value in 0.001 W (current power output, refresh interval 2 minutes)
    * @return power in W or kW
    */
   public static String getPower(Locale locale, int power) {
     if (power < 1) {
       return "0 Watt";
     }
-    double watt = Math.floor(power) * 0.01d;
-
+    double watt = Math.floor(power) * 0.001d;
     if (watt < 1000) {
       return String.format(locale, "%.1f Watt", watt);
     }
@@ -101,9 +100,9 @@ public class FritzUtils {
 
   /**
    * Formated total energy consumption since start (sample: 12.1 Wh)
-   * 
+   *
    * @param locale Locale
-   * @param energy vlaue in 1.0 Wh (total energy consumption since start)
+   * @param energy value in 1.0 Wh (total energy consumption since start)
    * @return energy in Wh or kWh
    */
   public static String getEnergy(Locale locale, int energy) {
@@ -118,7 +117,7 @@ public class FritzUtils {
 
   /**
    * Formated temperature output (sample: 24.1°C)
-   * 
+   *
    * @param locale Locale
    * @param celsius in 0,1°C, negative or positive value
    * @return temperature
@@ -133,7 +132,7 @@ public class FritzUtils {
 
   /**
    * Formated temperature output (sample: 64.1°F)
-   * 
+   *
    * @param locale Locale
    * @param celsius in 0,1°C, negative or positive value
    * @return temperature in fahrenheit
@@ -146,7 +145,7 @@ public class FritzUtils {
   /**
    * XXtemperatur in 0,5°C, Values: 0x10 – 0x38 16 – 56 (8 to 28°C), 16 <= 8°C, 17 = 8,5°C...... 56
    * >= 28°C, 254 = ON , 253 = OFF
-   * 
+   *
    * @param locale Locale
    * @param value
    * @return (8°C to 28°C), ON, OFF, < 8°C, > 28°C

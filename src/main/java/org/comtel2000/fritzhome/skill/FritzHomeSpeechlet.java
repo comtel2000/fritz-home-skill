@@ -172,7 +172,7 @@ public class FritzHomeSpeechlet implements Speechlet {
         return newResponse(String.format("%s %s hat keine Energieverbauchswerte", toGroupName(device), deviceSlot.getValue()));
       }
       StringBuilder sb = new StringBuilder();
-      sb.append("Der aktuelle Energieverbrauch von ").append(deviceSlot.getValue()).append(" ist ")
+      sb.append("Der aktuelle Energie Verbrauch von ").append(deviceSlot.getValue()).append(" ist ")
           .append(FritzUtils.getPower(locale, device.getPower()));
       if (device.getEnergy() > 0) {
         sb.append(" mit einem Gesamtverbrauch von ").append(FritzUtils.getEnergy(locale, device.getEnergy()));
@@ -182,7 +182,7 @@ public class FritzHomeSpeechlet implements Speechlet {
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
     }
-    return newResponse("Es ist ein Fehler beim Lesen des Energieverbrauches aufgetreten");
+    return newResponse("Es ist ein Fehler beim Lesen des Energie Verbrauches aufgetreten");
   }
 
   private Optional<SwitchDevice> findDevice(String name) throws Exception {
