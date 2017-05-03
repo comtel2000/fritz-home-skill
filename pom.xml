@@ -16,7 +16,11 @@
 		<fritzhome.pwd>[your user pwd]</fritzhome.pwd>
 		<fritzhome.appid>amzn1.echo-sdk-ams.app.[unique-value-here]</fritzhome.appid>
 	</properties>
-
+	<scm>
+		<url>https://github.com/comtel2000/fritz-home-skill</url>
+		<connection>scm:git:git@github.com:comtel2000/fritz-home-skill.git</connection>
+		<developerConnection>scm:git:git@github.com:comtel2000/fritz-home-skill.git</developerConnection>
+	</scm>
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
