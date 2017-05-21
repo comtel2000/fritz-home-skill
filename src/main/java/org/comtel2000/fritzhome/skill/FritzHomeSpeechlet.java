@@ -270,22 +270,27 @@ public class FritzHomeSpeechlet implements Speechlet {
       sb.append(toGroupName(dev)).append(dev.getName()).append(" ist ").append(toString(dev.getState()));
       if (dev.isTemperature() && dev.isPowermeter()) {
         sb.append(" ,die Temperatur beträgt ").append(FritzUtils.getTemperature(locale, dev.getTemperature()));
-        sb.append(" und der aktuelle Energieverbrauch liegt bei ").append(FritzUtils.getPower(locale, dev.getPower()));
-        if (dev.getEnergy() > 0) {
-          sb.append(" mit einem Gesamtverbrauch von ").append(FritzUtils.getEnergy(locale, dev.getEnergy()));
-        }
+        appendEnergyOutput(sb, dev, locale);
       } else if (dev.isTemperature()) {
         sb.append(" und die Temperatur beträgt ").append(FritzUtils.getTemperature(locale, dev.getTemperature()));
       } else if (dev.isPowermeter()) {
-        sb.append(" und der aktuelle Energieverbrauch liegt bei ").append(FritzUtils.getPower(locale, dev.getPower()));
-        if (dev.getEnergy() > 0) {
-          sb.append(" mit einem Gesamtverbrauch von ").append(FritzUtils.getEnergy(locale, dev.getEnergy()));
-        }
+        appendEnergyOutput(sb, dev, locale);
       }
       return sb.append(".").toString();
     };
   }
 
+  private void appendEnergyOutput(StringBuilder sb, SwitchDevice dev, Locale locale) {
+    if (dev.getState() != State.OFF) {
+      sb.append(" und der aktuelle Energieverbrauch liegt bei ").append(FritzUtils.getPower(locale, dev.getPower()));
+      if (dev.getEnergy() > 0) {
+        sb.append(" mit einem Gesamtverbrauch von ").append(FritzUtils.getEnergy(locale, dev.getEnergy()));
+      }
+    } else if (dev.getEnergy() > 0) {
+      sb.append(" und der Gesamtverbrauch liegt bei ").append(FritzUtils.getEnergy(locale, dev.getEnergy()));
+    }
+  }
+  
   private String toGroupName(SwitchDevice dev) {
     if (dev.isGroup()) {
       return "Die Gerätegruppe";
