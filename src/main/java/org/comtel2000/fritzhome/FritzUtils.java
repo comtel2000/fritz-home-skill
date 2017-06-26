@@ -114,7 +114,7 @@ public class FritzUtils {
     }
     return String.format(locale, "%.1f kWh", Math.floor(energy) / 1000);
   }
-
+  
   /**
    * Formated temperature output (sample: 24.1°C)
    *
@@ -142,6 +142,7 @@ public class FritzUtils {
     return String.format(locale, "%.1f°F", toFahrenheit(t));
   }
 
+ 
   /**
    * XXtemperatur in 0,5°C, Values: 0x10 – 0x38 16 – 56 (8 to 28°C), 16 <= 8°C, 17 = 8,5°C...... 56
    * >= 28°C, 254 = ON , 253 = OFF
@@ -169,6 +170,7 @@ public class FritzUtils {
     double celsius = 8 + ((value - 16) * 0.5);
     return String.format(locale, "%.1f°C", celsius);
   }
+ 
 
   public static String getHkrTemperatureF(Locale locale, int value) {
     if (value == 254) {
@@ -188,6 +190,39 @@ public class FritzUtils {
   }
 
 
+    /** temperature in 0,5°C 
+   *
+   * @param locale Locale
+   * @param value
+   * @return ON, OFF, 
+   */
+  public static String writeTemperature(int value) {
+
+    if (value == 254) {
+      return "ON";
+    }
+    if (value == 253) {
+      return "OFF";
+    }
+    return (String.valueOf(value * 2));
+  }
+  
+  
+    public static String readTemperature(String str) {
+
+	int value = Integer.valueOf(str);
+	
+    if (value == 254) {
+      return "ON";
+    }
+    if (value == 253) {
+      return "OFF";
+    }
+    return (String.valueOf(value / 2));
+  }
+ 
+  
+  
   private static double toFahrenheit(double celsius) {
     double f = 9 * celsius / 5 + 32;
     return f;
