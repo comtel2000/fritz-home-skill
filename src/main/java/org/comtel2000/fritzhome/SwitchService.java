@@ -1,5 +1,8 @@
 package org.comtel2000.fritzhome;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -27,6 +30,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.comtel2000.fritzhome.xml.Group;
 import org.comtel2000.fritzhome.xml.Device;
 import org.comtel2000.fritzhome.xml.Devicelist;
 import org.slf4j.LoggerFactory;
@@ -53,6 +57,8 @@ public class SwitchService {
 
   private final static String SID_SWITCHCMD_URL = "/webservices/homeautoswitch.lua?switchcmd=%s&sid=%s";
   private final static String SID_AIN_SWITCHCMD_URL = "/webservices/homeautoswitch.lua?ain=%s&switchcmd=%s&sid=%s";
+  private final static String SID_PARAM_SWITCHCMD_URL = "/webservices/homeautoswitch.lua?switchcmd=%s&param=%s&sid=%s";
+  private final static String SID_AIN_PARAM_SWITCHCMD_URL = "/webservices/homeautoswitch.lua?ain=%s&switchcmd=%s&param=%s&sid=%s";
 
   private final DocumentBuilderFactory xmlFactory = DocumentBuilderFactory.newInstance();
 
@@ -195,11 +201,12 @@ public class SwitchService {
     if (devList == null) {
       return Collections.emptyList();
     }
-    List<SwitchDevice> list = devList.getDevice().stream().filter(d -> d.getSwitch() != null).map(d -> {
+    List<SwitchDevice> list = devList.getDevice().stream().map(d -> {
       FritzUtils.isSwitch(d.getFunctionbitmask());
       SwitchDevice dev = new SwitchDevice(d.getIdentifier(), d.getFunctionbitmask());
       dev.setName(d.getName());
       dev.setPresent(d.isPresent());
+	  dev.setId(String.valueOf(d.getId()));
       Optional.ofNullable(d.getSwitch()).ifPresent(v -> {
         dev.setState(v.getState());
         dev.setMode(v.getMode());
@@ -216,21 +223,76 @@ public class SwitchService {
     if (devList.getGroup().isEmpty()) {
       return list;
     }
-    List<SwitchDevice> groups = devList.getGroup().stream().filter(d -> d.getSwitch() != null).map(d -> {
+    List<SwitchDevice> groups = devList.getGroup().stream().map(d -> {
       SwitchDevice dev = new SwitchDevice(d.getIdentifier(), d.getFunctionbitmask());
       dev.setName(d.getName());
       dev.setGroup(true);
+	  	dev.setId(String.valueOf(d.getId()));
       dev.setPresent(d.isPresent());
+	  	Group.Groupinfo info = d.getGroupinfo();
+	  	if (info != null) {
+	  		dev.setGroupmembers(info.getMembers());
+	  		dev.setMasterdevice(String.valueOf(info.getMasterdeviceid()));
+	  	}
       Optional.ofNullable(d.getSwitch()).ifPresent(v -> {
         dev.setState(v.getState());
         dev.setMode(v.getMode());
         dev.setLock(v.getLock());
       });
+		  Optional.ofNullable(d.getTemperature()).ifPresent(v -> dev.setTemperature(v.getCelsius() + v.getOffset()));
       return dev;
     }).collect(Collectors.toList());
     list.addAll(groups);
     return list;
   }
+
+  	public int getDeviceTemp(final SwitchDevice dev, SwitchCmd cmd){
+		try {
+			String sid = getCachedSessionId();
+			String ain = dev.getAin();
+			
+			String path = (ain == null) ? String.format(SID_SWITCHCMD_URL, cmd, sid) : String.format(SID_AIN_SWITCHCMD_URL, ain, cmd, sid);
+			
+			HttpURLConnection con = createConnection(path);
+
+			handleResponseCode(con.getResponseCode());
+			
+			Scanner scanner = new Scanner(con.getInputStream(), StandardCharsets.UTF_8.name());
+			String rtrn = scanner.useDelimiter("\\A").next().trim();
+			return Integer.parseInt(FritzUtils.readTemperature(rtrn));
+			
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return 0;
+			
+		}
+		
+	}
+ 
+  
+  
+  public void setTemp(final SwitchDevice dev, int temp) throws Exception {
+    logger.debug("try to change Temp: {}°", temp);
+    String sid = getCachedSessionId();
+	
+	String rtrn = FritzUtils.writeTemperature(temp);
+	
+	String temperature;
+	switch (rtrn){
+		case "ON": temperature = String.valueOf(FritzUtils.writeTemperature(getDeviceTemp(dev, SwitchCmd.gethkrkomfort)));
+		break;
+		case "OFF": temperature = String.valueOf(FritzUtils.writeTemperature(getDeviceTemp(dev, SwitchCmd.gethkrabsenk)));
+		break;
+		default: temperature = rtrn;
+		break;
+	}
+	
+    dev.setTemperature(sendTempCmd(dev.getAin(), SwitchCmd.sethkrtsoll, sid, String.valueOf(temperature)));
+	
+	return;
+  }
+  
+  
 
   public void setDeviceState(final SwitchDevice dev, boolean on) throws Exception {
     logger.debug("try to change device state: {} to {}", dev, on);
@@ -272,6 +334,26 @@ public class SwitchService {
     logger.debug("get: {}", response);
     return response.toString();
   }
+  
+  
+  private int sendTempCmd(String ain, SwitchCmd cmd, String sid, String temp) throws MalformedURLException, IOException {
+  
+    String path = (ain == null) ? String.format(SID_PARAM_SWITCHCMD_URL, cmd, temp, sid) : String.format(SID_AIN_PARAM_SWITCHCMD_URL, ain, cmd, temp, sid);
+
+    logger.debug("send: {}", path);
+    HttpURLConnection con = createConnection(path);
+
+    try {
+      handleResponseCode(con.getResponseCode());
+    } catch (IOException e) {
+      invalidateSidCache();
+      throw e;
+    }
+	
+	return Integer.parseInt(temp)/2;
+	
+  }
+  
 
   public void refreshSwitchDevice(final SwitchDevice dev) throws Exception {
 
@@ -304,6 +386,7 @@ public class SwitchService {
     String path = String.format(SID_SWITCHCMD_URL, SwitchCmd.getdevicelistinfos, sid);
     logger.debug("send: {}", path);
     HttpURLConnection con = createConnection(path);
+	
     try (Scanner scanner = new Scanner(con.getInputStream(), StandardCharsets.UTF_8.name())) {
       logger.debug("response:\n{}", scanner.useDelimiter("\\A").next());
     }
@@ -331,6 +414,7 @@ public class SwitchService {
     Devicelist devList = null;
 
     try (BufferedInputStream is = new BufferedInputStream(con.getInputStream())) {
+		
       devList = (Devicelist) unmarshaller.unmarshal(is);
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
@@ -339,6 +423,7 @@ public class SwitchService {
       throw new IOException(String.format("read device list failed: %s", SwitchCmd.getdevicelistinfos));
     }
     return devList;
+  
   }
 
 }
