@@ -21,6 +21,9 @@ public class SwitchDevice implements Serializable {
   private final String ain;
   private final int bitmask;
   private String name;
+  private String ID;
+  private String masterDevice;
+  private String GroupMembers;
 
   private State state = State.UNDEFINED;
   private Mode mode = Mode.UNDEFINED;
@@ -69,6 +72,14 @@ public class SwitchDevice implements Serializable {
 
   public final void setName(String name) {
     this.name = name;
+  }
+  
+  public final String getId() {
+    return ID;
+  }
+
+  public final void setId(String id) {
+    this.ID = id;
   }
 
   public final State getState() {
@@ -206,6 +217,22 @@ public class SwitchDevice implements Serializable {
 
   public void setGroup(boolean group) {
     this.group = group;
+  }
+  
+  public String getGroupmembers(){
+	return GroupMembers;
+  }
+  
+  public void setGroupmembers(String groupmembers){
+	this.GroupMembers = groupmembers;
+  }
+  
+  public String getMasterdevice(){
+	return masterDevice;
+  }
+  
+  public void setMasterdevice(String masterdevice){
+	this.masterDevice = masterdevice;
   }
 
   @Override
