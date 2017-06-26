@@ -65,5 +65,15 @@ To run this fritzbox home skill you need to do two things. The first is to deplo
 
     User: "Alexa, frage Fritzbox nach dem Energieverbrauch von Flurlicht."
     Alexa: "Der aktuelle Energieverbrauch von Flurlicht liegt bei 10 Watt."
+    
+    User: "Alexa, sagte Fritzbox setzte die Temperatur im Wohnzimmer auf 20°C"
+    Alexa: "Okay, ich habe die Temperatur im Wohnzimmer auf 20°C gesetzt."
+    
+    User: "Alexa, sagte Fritzbox erhöhe die Temperatur im Wohnzimmer um 2°C"
+    Alexa: "Okay, ich habe die Temperatur im Wohnzimmer auf 20°C erhöht."
+    
+    User: "Alexa, sagte Fritzbox verringere die Temperatur im Wohnzimmer um 2°C"
+    Alexa: "Okay, ich habe die Temperatur im Wohnzimmer auf 18°C verringert."
+    
 ## License
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
