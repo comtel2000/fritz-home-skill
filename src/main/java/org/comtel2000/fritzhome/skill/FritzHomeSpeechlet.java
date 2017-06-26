@@ -1,5 +1,6 @@
 package org.comtel2000.fritzhome.skill;
 
+import java.io.*;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
@@ -10,6 +11,7 @@ import org.comtel2000.fritzhome.FritzUtils;
 import org.comtel2000.fritzhome.SwitchDevice;
 import org.comtel2000.fritzhome.SwitchDevice.State;
 import org.comtel2000.fritzhome.SwitchService;
+import org.comtel2000.fritzhome.SwitchCmd;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +41,9 @@ public class FritzHomeSpeechlet implements Speechlet {
   private final static String DEVICE_ON_INTENT = "DeviceOnIntent";
   private final static String DEVICE_OFF_INTENT = "DeviceOffIntent";
   private final static String DEVICE_TEMP_INTENT = "DeviceTempIntent";
+  private final static String DEVICE_TEMP_SET_INTENT = "DeviceTempSetIntent";
+  private final static String DEVICE_TEMP_INC_INTENT = "DeviceTempIncIntent";
+  private final static String DEVICE_TEMP_DEC_INTENT = "DeviceTempDecIntent";
   private final static String DEVICE_POWER_INTENT = "DevicePowerIntent";
 
   private final static String HELP_INTENT = "AMAZON.HelpIntent";
@@ -46,7 +51,11 @@ public class FritzHomeSpeechlet implements Speechlet {
   private final static String STOP_INTENT = "AMAZON.StopIntent";
 
   private static final String DEVICE_SLOT = "Device";
-
+  private static final String TEMP_SLOT = "Temp";
+	
+  private static final int TEMP_STATUS_ON = 254;
+  private static final int TEMP_STATUS_OFF = 253;
+  
   @Override
   public void onSessionStarted(final SessionStartedRequest request, final Session session) throws SpeechletException {
     logger.info("onSessionStarted requestId={}, sessionId={}", request.getRequestId(), session.getSessionId());
@@ -86,6 +95,12 @@ public class FritzHomeSpeechlet implements Speechlet {
         return setDevice(intent, false);
       case DEVICE_TEMP_INTENT:
         return getDeviceTemp(intent, request.getLocale());
+	  case DEVICE_TEMP_INC_INTENT:
+        return incDeviceTemp(intent, request.getLocale());
+	  case DEVICE_TEMP_DEC_INTENT:
+        return decDeviceTemp(intent, request.getLocale());
+      case DEVICE_TEMP_SET_INTENT:
+      	return setDeviceTemp(intent, request.getLocale());
       case DEVICE_POWER_INTENT:
         return getDeviceEnergy(intent, request.getLocale());
       case HELP_INTENT:
@@ -100,6 +115,108 @@ public class FritzHomeSpeechlet implements Speechlet {
     }
   }
 
+	private SpeechletResponse setDeviceTemp (final Intent intent, final Locale locale){
+	
+		Slot deviceSlot = intent.getSlot(DEVICE_SLOT);
+		if (deviceSlot == null || deviceSlot.getValue() == null) {
+		  return newResponse("Gerät nicht erkannt");
+		}
+		try {
+		
+			Slot TempSlot = intent.getSlot(TEMP_SLOT);
+			if (TempSlot == null || TempSlot.getValue() == null) {
+			  return newResponse("Temperatur nicht erkannt");
+			}
+				
+			Optional<SwitchDevice> dev = findDevice(deviceSlot.getValue());
+			if (!dev.isPresent()) {
+			  return newResponse(String.format("Das Gerät %s ist mir nicht bekannt", deviceSlot.getValue()));
+			}
+			SwitchDevice device = dev.get();
+			
+			String sTemperatur = TempSlot.getValue().toString();
+			Integer iTemperatur = Integer.valueOf(sTemperatur);
+			
+			service.setTemp(device, iTemperatur);
+			return newResponse("OK, ich habe die Temperatur von " + deviceSlot.getValue() + " auf " + sTemperatur +  " Grad gesetzt");
+		
+		} catch (Exception e) {
+		  logger.error(e.getMessage(), e);
+		  return newResponse("Fehler");
+		}  
+
+	}
+
+	private SpeechletResponse decDeviceTemp(final Intent intent, final Locale locale){
+	
+		Slot deviceSlot = intent.getSlot(DEVICE_SLOT);
+		if (deviceSlot == null || deviceSlot.getValue() == null) {
+		  return newResponse("Gerät nicht erkannt");
+		}
+		try {
+		
+			Slot TempSlot = intent.getSlot(TEMP_SLOT);
+			if (TempSlot == null || TempSlot.getValue() == null) {
+			  return newResponse("Temperatur nicht erkannt");
+			}
+				
+			Optional<SwitchDevice> dev = findDevice(deviceSlot.getValue());
+			if (!dev.isPresent()) {
+			  return newResponse(String.format("Das Gerät %s ist mir nicht bekannt", deviceSlot.getValue()));
+			}
+			SwitchDevice device = dev.get();
+			
+			Integer iTemperatur = Integer.valueOf(TempSlot.getValue().toString());
+			
+			iTemperatur = service.getDeviceTemp(device, SwitchCmd.gethkrtsoll) - iTemperatur;
+			
+			service.setTemp(device, iTemperatur);
+			return newResponse("OK, ich habe die Temperatur von " + deviceSlot.getValue() + " auf " + String.valueOf(iTemperatur) +  " Grad verringert");
+		
+		} catch (Exception e) {
+		  logger.error(e.getMessage(), e);
+		  return newResponse("Fehler");
+		}  
+	
+	}
+	
+	
+	private SpeechletResponse incDeviceTemp(final Intent intent, final Locale locale){
+	
+		Slot deviceSlot = intent.getSlot(DEVICE_SLOT);
+		if (deviceSlot == null || deviceSlot.getValue() == null) {
+		  return newResponse("Gerät nicht erkannt");
+		}
+		try {
+		
+			Slot TempSlot = intent.getSlot(TEMP_SLOT);
+			if (TempSlot == null || TempSlot.getValue() == null) {
+			  return newResponse("Temperatur nicht erkannt");
+			}
+				
+			Optional<SwitchDevice> dev = findDevice(deviceSlot.getValue());
+			if (!dev.isPresent()) {
+			  return newResponse(String.format("Das Gerät %s ist mir nicht bekannt", deviceSlot.getValue()));
+			}
+			SwitchDevice device = dev.get();
+			
+			Integer iTemperatur = Integer.valueOf(TempSlot.getValue().toString());
+			
+			iTemperatur = iTemperatur + service.getDeviceTemp(device, SwitchCmd.gethkrtsoll);
+			
+			service.setTemp(device, iTemperatur);
+			return newResponse("OK, ich habe die Temperatur von " + deviceSlot.getValue() + " auf " + String.valueOf(iTemperatur) +  " Grad erhöht");
+		
+		} catch (Exception e) {
+		  logger.error(e.getMessage(), e);
+		  return newResponse("Fehler");
+		}  
+	
+	}
+	
+	
+	
+	
   private SpeechletResponse setDevice(final Intent intent, boolean enable) {
     Slot deviceSlot = intent.getSlot(DEVICE_SLOT);
     if (deviceSlot == null || deviceSlot.getValue() == null) {
@@ -112,39 +229,96 @@ public class FritzHomeSpeechlet implements Speechlet {
         return newResponse(String.format("Das Gerät %s ist mir nicht bekannt", deviceSlot.getValue()));
       }
       SwitchDevice device = dev.get();
-      if (!device.isSwitch()) {
-        return newResponse(String.format("%s %s ist kein Schaltgerät", toGroupName(device), deviceSlot.getValue()));
-      }
+	  
+	  logger.debug("Members: {}", device.getGroupmembers());
+	  
       if (!device.isPresent()) {
         return newResponse(String.format("%s %s ist nicht verbunden", toGroupName(device), deviceSlot.getValue()));
       }
+	  if (device.isSwitch()) {
       service.setDeviceState(device, enable);
       boolean succeed = device.getState() == (enable ? State.ON : State.OFF);
-      return newResponse("Fritz Home Switch", succeed ? "Ok" : String.format("Das Gerät %s konnte nicht geschaltet werden", deviceSlot.getValue()));
+	  return newResponse("Fritz Home Switch", succeed ? "Ok" : String.format("Das Gerät %s konnte nicht geschaltet werden", deviceSlot.getValue()));
+	  
+      } else if (device.isTemperature()){
+			service.setTemp(device, service.getDeviceTemp(device, enable ? SwitchCmd.gethkrkomfort : SwitchCmd.gethkrabsenk));
+			return newResponse(String.format("Ich habe das Thermometer %s %s geschaltet",deviceSlot.getValue()  , enable ? "an" : "aus"));
+		
+	  } else if (device.isGroup()){
+			return setGroup(device, enable);
+	  }
+      
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
     }
     return newResponse("Es ist ein Fehler beim Schalten des Gerätes aufgetreten");
   }
+  
+  
+  private SpeechletResponse setGroup(SwitchDevice group, boolean enable){
+	Optional<SwitchDevice> dev = null;
+	
+	try {
+		
+		String[] member = group.getGroupmembers().split(",");
+		for (int i=0; i<member.length; i++){
+			dev = findDeviceByID(member[i]);
+			SwitchDevice device = dev.get();
+			if (device.isTemperature())
+				service.setTemp(device, service.getDeviceTemp(device, enable ? SwitchCmd.gethkrkomfort : SwitchCmd.gethkrabsenk));
+			if (device.isSwitch())
+				service.setDeviceState(device, enable);
+		}
+		return newResponse(String.format("Ich habe die Gruppe %s %s geschaltet", group.getName(), enable ? "an" : "aus"));
+	} catch (Exception e) {
+		logger.error(e.getMessage(), e);
+	}  
+	return newResponse("Fritz Home Group Temp", "Fehler beim Schalten der Gruppe!");
+	  
+  }
+  
 
+    public String[] getGroupmembersname(SwitchDevice group){
+  	String[] member = group.getGroupmembers().split(",");
+	try {
+		for (int i=0; i<member.length; i++){
+			Optional<SwitchDevice>  dev = findDeviceByID(member[i]);
+			if (dev != null){
+				SwitchDevice device = dev.get();
+				member[i] = device.getName();
+			}
+		}
+	} catch (Exception e) {
+      logger.error(e.getMessage(), e);
+    }
+	
+	return member;
+  }
+  
   private SpeechletResponse getDeviceTemp(final Intent intent, final Locale locale) {
     Slot deviceSlot = intent.getSlot(DEVICE_SLOT);
     if (deviceSlot == null || deviceSlot.getValue() == null) {
       return newResponse("Gerät nicht erkannt");
     }
-
+	
     try {
       Optional<SwitchDevice> dev = findDevice(deviceSlot.getValue());
-      if (!dev.isPresent()) {
-        return newResponse(String.format("Das Gerät %s ist mir nicht bekannt", deviceSlot.getValue()));
-      }
-      SwitchDevice device = dev.get();
-      if (!device.isPresent()) {
-        return newResponse(String.format("%s %s ist aktuell nicht verfügbar", toGroupName(device), deviceSlot.getValue()));
-      }
-      if (!device.isTemperature()) {
-        return newResponse(String.format("%s %s hat keinen Temperatursensor", toGroupName(device), deviceSlot.getValue()));
-      }
+	  SwitchDevice device = dev.get();
+	  
+	  if (device.isGroup()){
+		return getGroupTemperature(device, locale);
+	  }
+	  
+	  if (!dev.isPresent()) {
+		return newResponse(String.format("Das Gerät %s ist mir nicht bekannt", deviceSlot.getValue()));
+	  }
+	  if (!device.isPresent()) {
+		return newResponse(String.format("%s %s ist aktuell nicht verfügbar", toGroupName(device), deviceSlot.getValue()));
+	  }
+	  if (!device.isTemperature()) {
+		return newResponse(String.format("%s %s hat keinen Temperatursensor", toGroupName(device), deviceSlot.getValue()));
+	  }
+	  
       return newResponse("Fritz Home Temperatur",
           String.format("Die Temperatur an Gerät %s beträgt %s", deviceSlot.getValue(), FritzUtils.getTemperature(locale, device.getTemperature())));
     } catch (Exception e) {
@@ -153,6 +327,8 @@ public class FritzHomeSpeechlet implements Speechlet {
     return newResponse("Es ist ein Fehler beim Lesen der Gerätetemperatur aufgetreten");
   }
 
+ 
+  
   private SpeechletResponse getDeviceEnergy(final Intent intent, final Locale locale) {
     Slot deviceSlot = intent.getSlot(DEVICE_SLOT);
     if (deviceSlot == null || deviceSlot.getValue() == null) {
@@ -168,7 +344,7 @@ public class FritzHomeSpeechlet implements Speechlet {
       if (!device.isPresent()) {
         return newResponse(String.format("%s %s ist aktuell nicht verfügbar", toGroupName(device), deviceSlot.getValue()));
       }
-      if (!device.isPowermeter()) {
+      if (!device.isPowermeter()&& !device.isGroup())  {
         return newResponse(String.format("%s %s hat keine Energieverbauchswerte", toGroupName(device), deviceSlot.getValue()));
       }
       StringBuilder sb = new StringBuilder();
@@ -184,7 +360,67 @@ public class FritzHomeSpeechlet implements Speechlet {
     }
     return newResponse("Es ist ein Fehler beim Lesen des Energie Verbrauches aufgetreten");
   }
-
+  
+  
+  private SpeechletResponse getGroupTemperature(SwitchDevice group, Locale locale){
+	  
+	if (group.getMasterdevice().isEmpty() && group.getGroupmembers().isEmpty())
+		return newResponse("Fritz Home Group Temp", String.format("Die Gruppe %s hat keine Mitglieder", group.getName()));
+	  
+	Optional<SwitchDevice> dev = null;
+	StringBuilder sb = new StringBuilder();
+	sb.append("Die Temperatur an der Gruppe ").append(group.getName()).append(" beträgt");
+	try {
+		if (group.getGroupmembers() != null && !group.getGroupmembers().isEmpty()){
+			String[] member = getGroupmembersname(group);
+			for (int i=0; i<member.length; i++){
+				dev = findDeviceByID(member[i]);
+				if (dev != null){
+					SwitchDevice device = dev.get();
+					sb.append(" an ").append(device.getName()).append(" ");
+					sb.append(FritzUtils.getTemperature(locale, device.getTemperature())).append(",");
+				}
+			}
+		}else{
+			dev = findDeviceByID(group.getMasterdevice());
+			if (dev != null){
+				SwitchDevice device = dev.get();
+				sb.append(" an ").append(device.getName()).append(" ");
+				sb.append(FritzUtils.getTemperature(locale, device.getTemperature()));
+			}
+		}
+	} catch (Exception e) {
+		logger.error(e.getMessage(), e);
+	}  
+	return newResponse("Fritz Home Group Temp", sb.toString());
+  }
+  
+  
+  
+  
+  private Optional<SwitchDevice> findDeviceByID(String ID) throws Exception {
+    if (ID == null || ID.isEmpty()) {
+      return Optional.empty();
+    }
+    Collection<SwitchDevice> devices = service.getSwitchDevices();
+    if (devices.isEmpty()) {
+      return Optional.empty();
+    }
+    Optional<SwitchDevice> dev = devices.stream().filter(d -> ID.equalsIgnoreCase(d.getId())).findAny();
+    if (!dev.isPresent()) {
+      String cleanName = ID.replaceAll("\\.\\s*", "");
+      dev = devices.stream().filter(d -> cleanName.equalsIgnoreCase(d.getName().replaceAll("\\.\\s*", ""))).findAny();
+    }
+    if (!dev.isPresent()) {
+      String cleanName = ID.replaceAll("\\.\\s*", "").toLowerCase();
+      dev = devices.stream().filter(d -> d.getName().replaceAll("\\.\\s*", "").toLowerCase().startsWith(cleanName)).findAny();
+    }
+    return dev;
+  }
+  
+  
+  
+  
   private Optional<SwitchDevice> findDevice(String name) throws Exception {
     if (name == null || name.isEmpty()) {
       return Optional.empty();
@@ -211,13 +447,20 @@ public class FritzHomeSpeechlet implements Speechlet {
       Collection<SwitchDevice> devices = service.getSwitchDevices();
       devices.stream().filter(d -> d.isPresent()).forEach(dev -> {
         try {
-          service.setDeviceState(dev, enable);
+			if (dev.isTemperature()){
+				service.setTemp(dev, service.getDeviceTemp(dev, enable ? SwitchCmd.gethkrkomfort : SwitchCmd.gethkrabsenk));
+			}else if (dev.isSwitch()){
+				service.setDeviceState(dev, enable);
+			}else if (dev.isGroup()){
+				setGroup(dev, enable);
+			}
+
         } catch (Exception e) {
           logger.error(e.getMessage(), e);
         }
       });
 
-      return newResponse("Fritz Home Switch All", "ok");
+      return newResponse(String.format("Ich habe alle Geräte %s geschaltet", enable ? "an" : "aus"));
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
     }
@@ -267,35 +510,40 @@ public class FritzHomeSpeechlet implements Speechlet {
         sb.append(toGroupName(dev)).append(dev.getName()).append(" ist aktuell nicht verfügbar");
         return sb.toString();
       }
-      sb.append(toGroupName(dev)).append(dev.getName()).append(" ist ").append(toString(dev.getState()));
+      if (dev.isGroup()){
+      	String[] members = getGroupmembersname(dev);
+      	sb.append(toGroupName(dev)).append(dev.getName()).append(" hat ").append(members.length).append(" Geräte: ");
+      	sb.append(String.join(",", members));
+      	return sb.append(".").toString();
+      }
+	  
+      sb.append(toGroupName(dev)).append(dev.getName());
       if (dev.isTemperature() && dev.isPowermeter()) {
+		sb.append(" ist ").append(toString(dev.getState()));
         sb.append(" ,die Temperatur beträgt ").append(FritzUtils.getTemperature(locale, dev.getTemperature()));
-        appendEnergyOutput(sb, dev, locale);
+        sb.append(" und der aktuelle Energieverbrauch liegt bei ").append(FritzUtils.getPower(locale, dev.getPower()));
+        if (dev.getEnergy() > 0) {
+          sb.append(" mit einem Gesamtverbrauch von ").append(FritzUtils.getEnergy(locale, dev.getEnergy()));
+        }
       } else if (dev.isTemperature()) {
-        sb.append(" und die Temperatur beträgt ").append(FritzUtils.getTemperature(locale, dev.getTemperature()));
+        sb.append(" misst eine Temperatur von ").append(FritzUtils.getTemperature(locale, dev.getTemperature()));
+		sb.append(" und ist eingestellt auf ").append(service.getDeviceTemp(dev, SwitchCmd.gethkrtsoll)).append("°C");
       } else if (dev.isPowermeter()) {
-        appendEnergyOutput(sb, dev, locale);
+		sb.append(" ist ").append(toString(dev.getState()));
+        sb.append(" und der aktuelle Energieverbrauch liegt bei ").append(FritzUtils.getPower(locale, dev.getPower()));
+        if (dev.getEnergy() > 0) {
+          sb.append(" mit einem Gesamtverbrauch von ").append(FritzUtils.getEnergy(locale, dev.getEnergy()));
+        }
       }
       return sb.append(".").toString();
     };
   }
 
-  private void appendEnergyOutput(StringBuilder sb, SwitchDevice dev, Locale locale) {
-    if (dev.getState() != State.OFF) {
-      sb.append(" und der aktuelle Energieverbrauch liegt bei ").append(FritzUtils.getPower(locale, dev.getPower()));
-      if (dev.getEnergy() > 0) {
-        sb.append(" mit einem Gesamtverbrauch von ").append(FritzUtils.getEnergy(locale, dev.getEnergy()));
-      }
-    } else if (dev.getEnergy() > 0) {
-      sb.append(" und der Gesamtverbrauch liegt bei ").append(FritzUtils.getEnergy(locale, dev.getEnergy()));
-    }
-  }
-  
   private String toGroupName(SwitchDevice dev) {
     if (dev.isGroup()) {
-      return "Die Gerätegruppe";
+      return "Die Gerätegruppe ";
     }
-    return "Das Gerät";
+    return "Das Gerät ";
   }
 
   private String toString(State state) {
