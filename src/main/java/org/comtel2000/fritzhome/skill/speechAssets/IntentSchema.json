@@ -3,7 +3,7 @@
     {
       "intent": "StatusIntent"
     },
-        {
+    {
       "intent": "ListDeviceIntent"
     },
     {
@@ -13,40 +13,79 @@
       "intent": "AllDeviceOffIntent"
     },
     {
-      "intent": "DeviceOnIntent",
       "slots": [
         {
-          "name" : "Device",
+          "name": "Device",
           "type": "DEVICE_NAMES"
         }
-      ]
+      ],
+      "intent": "DeviceOnIntent"
     },
     {
-      "intent": "DeviceOffIntent",
       "slots": [
         {
-          "name" : "Device",
+          "name": "Device",
           "type": "DEVICE_NAMES"
         }
-      ]
+      ],
+      "intent": "DeviceOffIntent"
     },
     {
-      "intent": "DeviceTempIntent",
       "slots": [
         {
-          "name" : "Device",
+          "name": "Device",
           "type": "DEVICE_NAMES"
         }
-      ]
+      ],
+      "intent": "DeviceTempIntent"
     },
-   {
-      "intent": "DevicePowerIntent",
+    {
       "slots": [
         {
-          "name" : "Device",
+          "name": "Device",
           "type": "DEVICE_NAMES"
         }
-      ]
+      ],
+      "intent": "DevicePowerIntent"
+    },
+    {
+      "slots": [
+        {
+          "name": "Device",
+          "type": "DEVICE_NAMES"
+        },
+        {
+          "name": "Temp",
+          "type": "AMAZON.NUMBER"
+        }
+      ],
+      "intent": "DeviceTempSetIntent"
+    },
+    {
+      "slots": [
+        {
+          "name": "Device",
+          "type": "DEVICE_NAMES"
+        },
+        {
+          "name": "Temp",
+          "type": "AMAZON.NUMBER"
+        }
+      ],
+      "intent": "DeviceTempIncIntent"
+    },
+    {
+      "slots": [
+        {
+          "name": "Device",
+          "type": "DEVICE_NAMES"
+        },
+        {
+          "name": "Temp",
+          "type": "AMAZON.NUMBER"
+        }
+      ],
+      "intent": "DeviceTempDecIntent"
     },
     {
       "intent": "AMAZON.HelpIntent"

@@ -50,3 +50,8 @@ DevicePowerIntent wie viel verbraucht {Device}
 DevicePowerIntent wie ist der Verbrauch von Gerät {Device}
 DevicePowerIntent wie viel Energie verbraucht Gerät {Device}
 DevicePowerIntent wie viel verbraucht Gerät {Device}
+
+DeviceTempSetIntent setze im {Device} auf {Temp} Grad
+DeviceTempSetIntent dass im {Device} auf {Temp} Grad setzen
+DeviceTempIncIntent erhöhe {Device} um {Temp} Grad
+DeviceTempDecIntent verringere {Device} um {Temp} Grad
