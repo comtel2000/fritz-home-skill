@@ -67,3 +67,11 @@ To run this fritzbox home skill you need to do two things. The first is to deplo
     Alexa: "Der aktuelle Energieverbrauch von Flurlicht liegt bei 10 Watt."
 ## License
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+Trademarks:
+
+All trademarks and logos are the property of their respective owners.
+
+This project is an unofficial pice of software and has nothing in common with the AVM FRITZ!Box (AVM Computersysteme Vertriebs GmbH).
+
+THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
